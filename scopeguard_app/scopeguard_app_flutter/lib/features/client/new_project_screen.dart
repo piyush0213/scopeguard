@@ -64,7 +64,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
     });
     try {
       if (!_wantCustom) {
-        final d = jsonDecode(await client.shop.orderFromMenu(token, _brief.text.trim(), _picked.toList()));
+        final d = jsonDecode(await client.shop.orderFromMenu(token, _brief.text.trim(), _picked.toList(), returnUrl: stripeReturnUrl));
         final orderId = d['orderId'] as String;
         if (mounted) await openCheckout(context, orderId, d['checkoutUrl'] as String);
         _reset();

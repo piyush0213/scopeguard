@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
+import '../../core/payments.dart';
+import '../../core/ui.dart';
 import '../../core/session.dart';
 import '../client/new_project_screen.dart';
+import '../orders/order_screen.dart';
 import '../orders/orders_screen.dart';
 import '../room/join_room_screen.dart';
 
@@ -15,6 +18,32 @@ class HomeShell extends StatefulWidget {
 
 class _HomeShellState extends State<HomeShell> {
   int _tab = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    final ret = pendingStripeReturn;
+    pendingStripeReturn = null;
+    if (ret != null) WidgetsBinding.instance.addPostFrameCallback((_) => _handleStripeReturn(ret));
+  }
+
+  /// Back from Stripe Checkout: confirm the payment with the server and open the order.
+  Future<void> _handleStripeReturn(StripeReturn ret) async {
+    if (!mounted || isDev) return;
+    setState(() => _tab = 1);
+    if (ret.canceled) {
+      await forgetPendingPayment(ret.orderId);
+      if (mounted) toast(context, 'Payment canceled — nothing was charged.');
+    } else {
+      try {
+        final r = await confirmPayment(ret.orderId, stripeSessionId: ret.sessionId);
+        if (mounted) toast(context, r.paid ? 'Payment confirmed — money is in escrow and the scope is locked.' : 'Stripe has not confirmed the payment yet. It will update by itself.');
+      } catch (e) {
+        if (mounted) toast(context, errorText(e));
+      }
+    }
+    if (mounted) await Navigator.of(context).push(MaterialPageRoute(builder: (_) => OrderScreen(orderId: ret.orderId)));
+  }
 
   @override
   Widget build(BuildContext context) {

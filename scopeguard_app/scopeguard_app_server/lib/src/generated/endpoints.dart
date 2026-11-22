@@ -773,6 +773,11 @@ class Endpoints extends _is.EndpointDispatch {
               type: _is.getType<List<String>>(),
               nullable: false,
             ),
+            'returnUrl': _is.ParameterDescription(
+              name: 'returnUrl',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
           },
           call:
               (
@@ -784,6 +789,7 @@ class Endpoints extends _is.EndpointDispatch {
                     params['token'],
                     params['projectBrief'],
                     params['itemIds'],
+                    returnUrl: params['returnUrl'],
                   ),
         ),
         'startScoping': _is.MethodConnector(
@@ -908,6 +914,11 @@ class Endpoints extends _is.EndpointDispatch {
               type: _is.getType<int>(),
               nullable: false,
             ),
+            'returnUrl': _is.ParameterDescription(
+              name: 'returnUrl',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
           },
           call:
               (
@@ -918,6 +929,7 @@ class Endpoints extends _is.EndpointDispatch {
                 params['token'],
                 params['orderId'],
                 params['quoteVersion'],
+                returnUrl: params['returnUrl'],
               ),
         ),
         'verifyPayment': _is.MethodConnector(
@@ -963,6 +975,11 @@ class Endpoints extends _is.EndpointDispatch {
               type: _is.getType<String>(),
               nullable: false,
             ),
+            'returnUrl': _is.ParameterDescription(
+              name: 'returnUrl',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
           },
           call:
               (
@@ -973,7 +990,33 @@ class Endpoints extends _is.EndpointDispatch {
                 params['token'],
                 params['orderId'],
                 params['addonId'],
+                returnUrl: params['returnUrl'],
               ),
+        ),
+        'syncPayment': _is.MethodConnector(
+          name: 'syncPayment',
+          params: {
+            'token': _is.ParameterDescription(
+              name: 'token',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'orderId': _is.ParameterDescription(
+              name: 'orderId',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['shop'] as _i2j1extp.ShopEndpoint).syncPayment(
+                    session,
+                    params['token'],
+                    params['orderId'],
+                  ),
         ),
         'skipAddon': _is.MethodConnector(
           name: 'skipAddon',

@@ -252,7 +252,7 @@ class _RoomScreenState extends State<RoomScreen> {
                   onPressed: _busy
                       ? null
                       : () => _act(() async {
-                            final d = jsonDecode(await client.shop.checkout(token, s.room.orderId, (order['quote']['version'] as num).toInt()));
+                            final d = jsonDecode(await client.shop.checkout(token, s.room.orderId, (order['quote']['version'] as num).toInt(), returnUrl: stripeReturnUrl));
                             if (mounted) await openCheckout(context, s.room.orderId, d['checkoutUrl'] as String);
                           }),
                   child: Text('Pay ${money(total)} into escrow'),

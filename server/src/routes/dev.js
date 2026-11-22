@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { requireRole, HttpError } from '../auth.js';
-import { one, query } from '../db.js';
+import { one, many, query } from '../db.js';
+import { syncOrderPayments } from '../payments.js';
 import { listOrders, getOrder, broadcastOrder, insertMessage, totalOf, setStage } from '../services.js';
 import { config } from '../config.js';
 import { connectRepo, disconnectRepo, pollSoon } from '../github-sync.js';
@@ -9,6 +10,13 @@ export const devRouter = Router();
 const dev = requireRole('dev');
 
 devRouter.get('/dev/orders', dev, async (_req, res) => {
+  // Orders with an open Stripe checkout from the last hour: confirm them with Stripe (throttled), so a client's
+  // payment reaches the developer's queue even if the client closed the Stripe tab.
+  const open = await many(
+    `SELECT DISTINCT p.order_id FROM sg_payments p JOIN sg_orders o ON o.id=p.order_id
+     WHERE p.status='pending' AND NOT o.paid AND p.created_at > now() - interval '1 hour' LIMIT 5`,
+  );
+  await Promise.all(open.map((r) => syncOrderPayments(r.order_id, { minIntervalMs: 10000 }).catch(() => {})));
   res.json({ orders: await listOrders(`WHERE o.status <> 'scoping'`) });
 });
 

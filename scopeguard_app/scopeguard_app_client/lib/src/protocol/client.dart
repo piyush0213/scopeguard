@@ -398,17 +398,20 @@ class EndpointShop extends _isc.EndpointRef {
       );
 
   /// Menu-only cart: creates the order and returns {orderId, checkoutUrl}.
+  /// [returnUrl] is the app's own address, so Stripe sends the payer back into the app.
   _ida.Future<String> orderFromMenu(
     String token,
     String projectBrief,
-    List<String> itemIds,
-  ) => caller.callServerEndpoint<String>(
+    List<String> itemIds, {
+    String? returnUrl,
+  }) => caller.callServerEndpoint<String>(
     'shop',
     'orderFromMenu',
     {
       'token': token,
       'projectBrief': projectBrief,
       'itemIds': itemIds,
+      'returnUrl': returnUrl,
     },
   );
 
@@ -462,17 +465,20 @@ class EndpointShop extends _isc.EndpointRef {
   );
 
   /// Returns {checkoutUrl, scopeHash}. The Stripe session id is part of the URL; pass it to [verifyPayment].
+  /// [returnUrl] is the app's own address, so Stripe sends the payer back into the app.
   _ida.Future<String> checkout(
     String token,
     String orderId,
-    int quoteVersion,
-  ) => caller.callServerEndpoint<String>(
+    int quoteVersion, {
+    String? returnUrl,
+  }) => caller.callServerEndpoint<String>(
     'shop',
     'checkout',
     {
       'token': token,
       'orderId': orderId,
       'quoteVersion': quoteVersion,
+      'returnUrl': returnUrl,
     },
   );
 
@@ -492,14 +498,30 @@ class EndpointShop extends _isc.EndpointRef {
   _ida.Future<String> payAddon(
     String token,
     String orderId,
-    String addonId,
-  ) => caller.callServerEndpoint<String>(
+    String addonId, {
+    String? returnUrl,
+  }) => caller.callServerEndpoint<String>(
     'shop',
     'payAddon',
     {
       'token': token,
       'orderId': orderId,
       'addonId': addonId,
+      'returnUrl': returnUrl,
+    },
+  );
+
+  /// Asks Stripe about this order's open checkouts and settles any that are paid. Returns {settled, reason?, order}.
+  /// Needs no Stripe session id, so it works after the app was reloaded.
+  _ida.Future<String> syncPayment(
+    String token,
+    String orderId,
+  ) => caller.callServerEndpoint<String>(
+    'shop',
+    'syncPayment',
+    {
+      'token': token,
+      'orderId': orderId,
     },
   );
 

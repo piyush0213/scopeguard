@@ -35,5 +35,6 @@ shop:
   - checkout:
   - verifyPayment:
   - payAddon:
+  - syncPayment:
   - skipAddon:
   - acceptDelivery:

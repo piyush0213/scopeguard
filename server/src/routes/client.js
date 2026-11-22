@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { requireRole, HttpError } from '../auth.js';
 import { one, many, query } from '../db.js';
 import { generateQuestions, generateQuote } from '../ai.js';
-import { createCheckout, settleSessionById } from '../payments.js';
+import { createCheckout, settleSessionById, syncOrderPayments } from '../payments.js';
 import { emit } from '../realtime.js';
 import {
   getOrder, listOrders, loadOrderFor, broadcastOrder, insertMessage, totalOf, scopeHash, setStage,
@@ -85,6 +85,7 @@ clientRouter.post('/orders/menu', client, async (req, res) => {
     kind: 'initial',
     snapshot: { modules },
     customerEmail: me.email,
+    returnUrl: req.body?.returnUrl,
     lineItems: modules.map((m) => ({ name: m.name, description: m.description, amountCents: m.price_cents })),
   });
   await broadcastOrder(order.id);
@@ -325,6 +326,7 @@ clientRouter.post('/orders/:id/checkout', client, async (req, res) => {
     kind: 'initial',
     snapshot: { modules, version: order.quote.version, hash },
     customerEmail: me.email,
+    returnUrl: req.body?.returnUrl,
     lineItems: chosen.map((m) => ({ name: m.name, description: m.description, amountCents: m.price_cents })),
   });
   res.json({ checkoutUrl: session.url, scopeHash: hash });
@@ -341,6 +343,7 @@ clientRouter.post('/orders/:id/addons/:addonId/pay', client, async (req, res) =>
     kind: 'addon',
     addonMessageId: m.id,
     customerEmail: me.email,
+    returnUrl: req.body?.returnUrl,
     lineItems: [{ name: `Add-on: ${m.metadata_json.title}`, description: m.metadata_json.description, amountCents: m.metadata_json.priceCents }],
   });
   res.json({ checkoutUrl: session.url });
@@ -374,4 +377,12 @@ clientRouter.post('/payments/verify', client, async (req, res) => {
   await loadOrderFor(req.user, pay.order_id);
   const result = await settleSessionById(sessionId);
   res.json({ ...result, order: await getOrder(pay.order_id) });
+});
+
+// Asks Stripe about this order's open checkouts and settles any that are paid. Needs no session id, so it works
+// after the app was reloaded or the payer paid on another device.
+clientRouter.post('/orders/:id/payments/sync', client, async (req, res) => {
+  const order = await loadOrderFor(req.user, req.params.id);
+  const result = order.paid ? { settled: true, alreadySettled: true } : await syncOrderPayments(order.id);
+  res.json({ ...result, order: await getOrder(order.id) });
 });

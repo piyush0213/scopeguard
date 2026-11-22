@@ -4,10 +4,17 @@ import { postChat } from '../chat.js';
 import { gitInstructions } from './dev.js';
 import { config } from '../config.js';
 import { auditNow, proofScore } from '../proof.js';
+import { syncOrderPayments } from '../payments.js';
 
 export const ordersRouter = Router();
 
 ordersRouter.get('/orders/:id', async (req, res) => {
+  // An unpaid order with an open Stripe checkout: ask Stripe now and then, so a finished payment shows up for both
+  // the client and the developer even when nobody came back from Stripe and no webhook arrived.
+  const peek = await loadOrderFor(req.user, req.params.id);
+  if (!peek.paid && ['negotiating', 'awaiting_payment'].includes(peek.status)) {
+    await syncOrderPayments(peek.id, { minIntervalMs: 5000 }).catch(() => {});
+  }
   const [order, messages] = await Promise.all([
     loadOrderFor(req.user, req.params.id),
     listMessages(req.params.id, req.user.role),

@@ -1135,8 +1135,9 @@ class _ShopEndpoint {
     _ist.TestSessionBuilder sessionBuilder,
     String token,
     String projectBrief,
-    List<String> itemIds,
-  ) async {
+    List<String> itemIds, {
+    String? returnUrl,
+  }) async {
     return _ist.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
           (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
@@ -1152,6 +1153,7 @@ class _ShopEndpoint {
             'token': token,
             'projectBrief': projectBrief,
             'itemIds': itemIds,
+            'returnUrl': returnUrl,
           }),
           serializationManager: _serializationManager,
         );
@@ -1287,8 +1289,9 @@ class _ShopEndpoint {
     _ist.TestSessionBuilder sessionBuilder,
     String token,
     String orderId,
-    int quoteVersion,
-  ) async {
+    int quoteVersion, {
+    String? returnUrl,
+  }) async {
     return _ist.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
           (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
@@ -1304,6 +1307,7 @@ class _ShopEndpoint {
             'token': token,
             'orderId': orderId,
             'quoteVersion': quoteVersion,
+            'returnUrl': returnUrl,
           }),
           serializationManager: _serializationManager,
         );
@@ -1359,8 +1363,9 @@ class _ShopEndpoint {
     _ist.TestSessionBuilder sessionBuilder,
     String token,
     String orderId,
-    String addonId,
-  ) async {
+    String addonId, {
+    String? returnUrl,
+  }) async {
     return _ist.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
           (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
@@ -1376,6 +1381,42 @@ class _ShopEndpoint {
             'token': token,
             'orderId': orderId,
             'addonId': addonId,
+            'returnUrl': returnUrl,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<String>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<String> syncPayment(
+    _ist.TestSessionBuilder sessionBuilder,
+    String token,
+    String orderId,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'shop',
+            method: 'syncPayment',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'shop',
+          methodName: 'syncPayment',
+          parameters: _ist.testObjectToJson({
+            'token': token,
+            'orderId': orderId,
           }),
           serializationManager: _serializationManager,
         );

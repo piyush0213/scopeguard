@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'app/theme.dart';
 import 'client.dart';
+import 'core/payments.dart';
 import 'core/session.dart';
 import 'features/auth/login_screen.dart';
 import 'features/home/home_shell.dart';
@@ -11,6 +12,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeClient();
   await restoreSession();
+  await loadPendingPayments();
+  readStripeReturn();
   runApp(const ScopeGuardApp());
 }
 

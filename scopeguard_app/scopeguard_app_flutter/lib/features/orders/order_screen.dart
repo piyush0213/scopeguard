@@ -19,7 +19,7 @@ class OrderScreen extends StatefulWidget {
   State<OrderScreen> createState() => _OrderScreenState();
 }
 
-class _OrderScreenState extends State<OrderScreen> {
+class _OrderScreenState extends State<OrderScreen> with WidgetsBindingObserver {
   Map<String, dynamic>? _order;
   List<Map<String, dynamic>> _messages = [];
   String? _error;
@@ -33,7 +33,16 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _connect();
+  }
+
+  // Back from the Stripe page (in-app browser on phones, another tab on desktop): confirm the payment right away.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && pendingPayments.value.contains(_id) && _order?['paid'] != true) {
+      confirmPayment(_id).catchError((_) => (paid: false, reason: null));
+    }
   }
 
   void _connect() {
@@ -41,6 +50,11 @@ class _OrderScreenState extends State<OrderScreen> {
     _sub = client.orders.watch(token, _id).listen((j) {
       final d = jsonDecode(j) as Map<String, dynamic>;
       if (!mounted) return;
+      final nowPaid = d['order']?['paid'] == true;
+      if (nowPaid && _order != null && _order!['paid'] != true) {
+        toast(context, 'Payment received — money is in escrow and the scope is locked.');
+      }
+      if (nowPaid && pendingPayments.value.contains(_id)) forgetPendingPayment(_id);
       setState(() {
         _order = d['order'] as Map<String, dynamic>;
         _messages = (d['messages'] as List).cast<Map<String, dynamic>>();
@@ -55,6 +69,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _sub?.cancel();
     super.dispose();
   }
@@ -185,21 +200,25 @@ class _OrderScreenState extends State<OrderScreen> {
           onPressed: _busy
               ? null
               : () => _do(() async {
-                    final d = jsonDecode(await client.shop.checkout(token, _id, (o['quote']['version'] as num).toInt()));
+                    final d = jsonDecode(await client.shop.checkout(token, _id, (o['quote']['version'] as num).toInt(), returnUrl: stripeReturnUrl));
                     if (mounted) await openCheckout(context, _id, d['checkoutUrl'] as String);
                   }),
           child: Text('Accept & pay ${money(_total(o))}'),
         ));
-        if (pendingStripeSessions[_id] != null) {
+        if (pendingPayments.value.contains(_id)) {
+          out.add(const SizedBox(height: 6));
+          out.add(const Text('Paid on Stripe? This page updates by itself within a few seconds.',
+              textAlign: TextAlign.center, style: TextStyle(color: muted, fontSize: 12)));
           out.add(TextButton(
             onPressed: _busy
                 ? null
                 : () => _do(() async {
-                      final d = jsonDecode(await client.shop.verifyPayment(token, pendingStripeSessions[_id]!));
-                      if (d['settled'] != true) throw Exception('Payment not completed yet (${d['reason'] ?? 'open Stripe and finish paying'})');
-                      pendingStripeSessions.remove(_id);
-                    }, 'Payment confirmed — scope locked'),
-            child: const Text('I paid on Stripe — confirm payment', style: TextStyle(color: leaf)),
+                      final r = await confirmPayment(_id);
+                      if (!r.paid) {
+                        throw Exception('Stripe has no completed payment for this order yet. Finish paying on the Stripe page, then check again.');
+                      }
+                    }, 'Payment confirmed — money is in escrow'),
+            child: const Text('Check payment now', style: TextStyle(color: leaf)),
           ));
         }
         out.add(const _EscrowNote());
@@ -506,7 +525,7 @@ class _Message extends StatelessWidget {
             Row(mainAxisSize: MainAxisSize.min, children: [
               TextButton(
                 onPressed: () => attempt(context, () async {
-                  final d = jsonDecode(await client.shop.payAddon(token, orderId, '${m['id']}'));
+                  final d = jsonDecode(await client.shop.payAddon(token, orderId, '${m['id']}', returnUrl: stripeReturnUrl));
                   if (context.mounted) await openCheckout(context, orderId, d['checkoutUrl'] as String);
                 }),
                 child: Text('Pay & add ${money(meta['priceCents'] as num? ?? 0)}'),
