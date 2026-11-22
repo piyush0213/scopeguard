@@ -1,6 +1,24 @@
 # ScopeGuard
 
-Clients order software the way they order food, and track the build like a delivery.
+**Pay for proof, not promises.** Clients order software the way they order food, track the build like a delivery,
+and their money is released feature by feature only when an AI auditor finds each feature working in the real GitHub code.
+
+## Live demo
+
+| | Link |
+|---|---|
+| **Flutter app** (Serverpod Cloud) — includes **Scope Room**, Track 1 | https://scopeguard.serverpod.space |
+| Serverpod API | https://scopeguard.api.serverpod.space |
+| **Website** (React + Node, Render) | https://scopeguard-poqs.onrender.com |
+
+Demo accounts: `client@demo.dev` / `dev@demo.dev`, password `demo1234` (one-tap buttons on the sign-in screen).
+Stripe is in test mode: card `4242 4242 4242 4242`, any future date, any CVC.
+The website runs on Render's free plan, so the first load after 15 idle minutes takes about 50 seconds.
+Both front ends share the same data: an order placed in the Flutter app appears on the website, and the other way round.
+
+**Try Scope Room (Track 1):** sign in as Client on one phone, open order CD-1050, tap **Open** on the Scope Room card.
+On a second phone scan the QR (or join with the 4-letter code). Toggle an optional item and watch every phone's total
+change live; when everyone taps **I agree**, all phones light up in sync and the agreement is posted to the order chat.
 React + Vite · Express + Socket.IO · PostgreSQL · OpenRouter (Claude) · Stripe (test mode) · GitHub webhooks
 
 - **Real JWT auth + RBAC** with `client` and `dev` roles and separate portals (`/client/*`, `/dev/*`).

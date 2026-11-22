@@ -2,8 +2,8 @@
 
 ## Before judges arrive (5 min)
 1. `npm run reset`, then `npm run dev`.
-2. **Window A (normal Chrome, left half):** http://localhost:5173 → click **Client**.
-3. **Window B (Incognito, right half):** http://localhost:5173 → click **Developer**.
+2. **Window A (normal Chrome, left half):** https://scopeguard-poqs.onrender.com (or http://localhost:5173) → click **Client**.
+3. **Window B (Incognito, right half):** https://scopeguard-poqs.onrender.com (or http://localhost:5173) → click **Developer**.
 4. Have your demo repo cloned in a terminal, with `demo-repo-template/.github/workflows/ci.yml` committed to it. No tunnel needed.
 5. Keep the Stripe test card ready: `4242 4242 4242 4242` · `12/30` · `123`.
 

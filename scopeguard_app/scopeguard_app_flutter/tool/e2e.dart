@@ -1,13 +1,14 @@
 // End-to-end check of the Flutter version's backend (Serverpod) against the running ScopeGuard core:
 // sign-in, AI scoping, dev approval, then a Scope Room with a client, a developer and a guest.
-// Run (start-all.ps1 must be running):  dart run tool/e2e.dart
+// Run (start-all.ps1 must be running):  dart run tool/e2e.dart   (or set E2E_URL to test a deployed server)
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:scopeguard_app_client/scopeguard_app_client.dart';
 
-const url = 'http://localhost:8080/';
+// Against the cloud: set E2E_URL=https://scopeguard.api.serverpod.space/
+final url = Platform.environment['E2E_URL'] ?? 'http://localhost:8080/';
 var failures = 0;
 void check(bool ok, String label) {
   stdout.writeln('${ok ? 'PASS' : 'FAIL'}  $label');

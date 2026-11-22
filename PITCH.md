@@ -54,7 +54,7 @@ our whole pipeline, not a feature they can bolt on.
 > Upwork sells access to people. We sell verified outcomes. That's the company.
 
 ## Live demo runbook (about 5 minutes)
-1. Open http://localhost:5173. The landing page reads "Pay for proof, not promises."
+1. Open https://scopeguard-poqs.onrender.com (or http://localhost:5173 locally). The landing page reads "Pay for proof, not promises."
 2. Sign in as **Developer**, open **CD-1049** (Auth Module + Landing Page, already paid and accepted).
 3. In Build controls, connect `https://github.com/piyush0213/Dental`. The Proof Vault shows $550 held and compiles the criteria (about 10–20 s).
 4. In a second window, sign in as **Client** and open CD-1049 to show the client's view of the same vault.
