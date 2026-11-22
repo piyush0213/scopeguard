@@ -1,0 +1,5 @@
+# Ship the prebuilt Flutter web app (gitignored) with the server.
+!web/app/**
+# Never upload local dev data or logs.
+.pgdev/
+*.log
