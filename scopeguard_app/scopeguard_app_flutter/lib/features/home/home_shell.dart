@@ -29,6 +29,7 @@ class _HomeShellState extends State<HomeShell> {
 
   /// Back from Stripe Checkout: confirm the payment with the server and open the order.
   Future<void> _handleStripeReturn(StripeReturn ret) async {
+    clearStripeReturnFromUrl();
     if (!mounted || isDev) return;
     setState(() => _tab = 1);
     if (ret.canceled) {

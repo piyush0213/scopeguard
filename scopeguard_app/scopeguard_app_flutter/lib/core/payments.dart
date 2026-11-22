@@ -77,6 +77,9 @@ void readStripeReturn() {
   final paid = q['paid'], canceled = q['canceled'];
   if (paid == null && canceled == null) return;
   pendingStripeReturn = paid != null ? StripeReturn(paid, q['session_id'], canceled: false) : StripeReturn(canceled!, null, canceled: true);
-  // Drop the Stripe parameters from the address bar, so a reload doesn't repeat this.
-  SystemNavigator.routeInformationUpdated(uri: Uri(path: '/'), replace: true);
+}
+
+/// Drops the Stripe parameters from the address bar (call once the app is running), so a reload doesn't repeat it.
+void clearStripeReturnFromUrl() {
+  if (kIsWeb) SystemNavigator.routeInformationUpdated(uri: Uri(path: '/'), replace: true);
 }
