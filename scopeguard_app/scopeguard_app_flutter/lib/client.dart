@@ -17,6 +17,12 @@ Future<String> _resolveServerUrl() async {
   if (kIsWeb && fromDefine.isEmpty && base.scheme.startsWith('http') && base.host != 'localhost' && base.host != '127.0.0.1') {
     // Opened straight from the laptop's web server over Wi-Fi (http://<laptop-ip>:8082): the API is on :8080.
     if (base.port == 8082) return 'http://${base.host}:8080/';
+    // Hosted on Serverpod Cloud: the web app is on <project>.serverpod.space, the API on <project>.api.serverpod.space.
+    const cloud = '.serverpod.space';
+    if (base.host.endsWith(cloud) && !base.host.contains('.api.')) {
+      final project = base.host.substring(0, base.host.length - cloud.length);
+      return 'https://$project.api$cloud/';
+    }
     // Opened through the mobile gateway / public tunnel: the API is on the same address as the page.
     return '${base.origin}/';
   }
