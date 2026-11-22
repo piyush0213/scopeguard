@@ -1,0 +1,30 @@
+services:
+  # Development services
+  postgres:
+    image: ghcr.io/serverpod/postgres:16
+    ports:
+      - "8090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: scopeguard_app
+      POSTGRES_PASSWORD: "51JvLNUlu6-aehdavJGUCg9UqOK739tt"
+    volumes:
+      - scopeguard_app_data:/var/lib/postgresql/data
+
+
+  # Test services
+  postgres_test:
+    image: ghcr.io/serverpod/postgres:16
+    ports:
+      - "9090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: scopeguard_app_test
+      POSTGRES_PASSWORD: "v_8dHBeFx6bmMmW-zF4qL1-WCeRA7WTa"
+    volumes:
+      - scopeguard_app_test_data:/var/lib/postgresql/data
+
+
+volumes:
+  scopeguard_app_data:
+  scopeguard_app_test_data:

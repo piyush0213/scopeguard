@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+/* ScopeGuard — Ultra-refined Executive Cyber-Kitchen Dark Theme.
+   Obsidian glass, radiant vermilion flame, emerald pulse, cyber cyan telemetry.
+   Serif display with high-contrast luxury tracking, geometric sans, crisp monospace. */
+@theme {
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --font-display: "Instrument Serif", "Times New Roman", Georgia, serif;
+
+  /* Accent: electric vermilion & flame orange */
+  --color-brand-50: #1f0d09;
+  --color-brand-100: #2f120a;
+  --color-brand-200: #4a1c10;
+  --color-brand-300: #7c2a17;
+  --color-brand-400: #f45c3a;
+  --color-brand-500: #ff5733;
+  --color-brand-600: #ff7557;
+  --color-brand-700: #ffa18c;
+
+  /* Luxury Obsidian & Slate Neutrals */
+  --color-stone-50: #08090d;   /* canvas */
+  --color-stone-100: #10121a;  /* surface */
+  --color-stone-200: #1b1e2a;  /* elevated border */
+  --color-stone-300: #292d3e;  /* dividers */
+  --color-stone-400: #69718c;  /* subtle captions */
+  --color-stone-500: #939cb5;  /* muted body */
+  --color-stone-600: #b5bdd0;
+  --color-stone-700: #d6dbe6;
+  --color-stone-800: #eceef4;
+  --color-stone-900: #f8f9fb;  /* high contrast white */
+
+  --color-paper: #08090d;
+  --color-surface: #10121a;
+  --color-ink: #f8f9fb;
+  --color-leaf: #34d399;
+  --color-cyan: #38bdf8;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html { color-scheme: dark; }
+html, body, #root { height: 100%; }
+body {
+  background-color: var(--color-paper);
+  background-image:
+    radial-gradient(1100px 700px at 85% -5%, rgba(255, 87, 51, 0.12), transparent 60%),
+    radial-gradient(900px 500px at 15% 15%, rgba(56, 189, 248, 0.06), transparent 55%),
+    radial-gradient(800px 600px at 50% 90%, rgba(52, 211, 153, 0.04), transparent 60%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+  background-attachment: fixed;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Subtle holographic grain overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 0.96 0 0 0 0 0.9 0 0 0 0.12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.14); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.25); }
+::-webkit-scrollbar-track { background: transparent; }
+::selection { background: var(--color-brand-500); color: #fff; }
+input[type="checkbox"], input[type="radio"] { accent-color: var(--color-brand-500); }
+:focus-visible { outline: 2px solid var(--color-brand-500); outline-offset: 2px; }
+
+/* ------------------------------------------------------------------ Primitives */
+@utility card {
+  @apply rounded-2xl border border-white/[0.08] bg-[#10121a]/90 backdrop-blur-xl shadow-xl shadow-black/40 transition-all duration-300;
+}
+@utility card-glow {
+  @apply card hover:border-brand-500/40 hover:shadow-2xl hover:shadow-brand-500/10;
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium tracking-tight transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-40;
+  transition-timing-function: var(--ease-out-expo);
+}
+@utility btn-primary {
+  @apply btn bg-gradient-to-r from-brand-500 via-brand-600 to-amber-500 text-white font-medium shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 hover:brightness-110 active:scale-[0.98];
+}
+@utility btn-dark {
+  @apply btn border border-white/15 bg-white/[0.08] text-ink hover:bg-white/[0.15] hover:border-white/25 active:scale-[0.98];
+}
+@utility btn-accent {
+  @apply btn bg-brand-500 text-white hover:bg-brand-600 shadow-md shadow-brand-500/30 active:scale-[0.98];
+}
+@utility btn-ghost {
+  @apply btn border border-white/10 bg-white/[0.03] text-ink hover:border-white/25 hover:bg-white/[0.08];
+}
+@utility input {
+  @apply w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-ink outline-none transition placeholder:text-stone-500 focus:border-brand-500 focus:bg-white/[0.06] focus:ring-1 focus:ring-brand-500;
+}
+@utility label { @apply mb-1.5 block font-mono text-[11px] uppercase tracking-[0.16em] text-stone-400; }
+@utility eyebrow { @apply font-mono text-[11px] uppercase tracking-[0.2em] text-stone-400; }
+@utility display { @apply font-display font-normal tracking-[-0.03em] leading-[0.95]; }
+@utility pill-cyber {
+  @apply inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] backdrop-blur-md;
+}
+
+/* Menu-style dotted leader between a name and a price */
+.leader { flex: 1; min-width: 1.5rem; border-bottom: 1.5px dotted rgba(255, 255, 255, 0.18); transform: translateY(-0.3em); }
+
+/* Holographic Receipt / kitchen ticket with perforated edges */
+.ticket {
+  position: relative;
+  background: #12141e;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  -webkit-mask: radial-gradient(circle at 6px 0, transparent 5px, #000 5.5px) top / 12px 51% repeat-x,
+                radial-gradient(circle at 6px 100%, transparent 5px, #000 5.5px) bottom / 12px 51% repeat-x;
+          mask: radial-gradient(circle at 6px 0, transparent 5px, #000 5.5px) top / 12px 51% repeat-x,
+                radial-gradient(circle at 6px 100%, transparent 5px, #000 5.5px) bottom / 12px 51% repeat-x;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 30px -5px rgba(255, 87, 51, 0.15);
+}
+.rule-dashed { border-top: 1.5px dashed rgba(255, 255, 255, 0.14); }
+
+/* ------------------------------------------------------------------ Motion & Animations */
+@keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 rgba(255,87,51,.6); } 100% { box-shadow: 0 0 0 14px rgba(255,87,51,0); } }
+.pulse-ring { animation: pulse-ring 1.8s var(--ease-out-expo) infinite; }
+@keyframes pulse-glow { 0%, 100% { opacity: 0.8; transform: scale(1); } 50% { opacity: 1; transform: scale(1.05); } }
+.pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+@keyframes radar-sweep { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.radar-sweep { animation: radar-sweep 4s linear infinite; }
+@keyframes slide-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.slide-in { animation: slide-in .45s var(--ease-out-expo) both; }
+@keyframes modal-pop { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.modal-pop { animation: modal-pop .35s var(--ease-out-expo) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(0.7em); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+.rise { animation: rise 1s var(--ease-out-expo) both; }
+@keyframes flash { 0%,100% { background-color: transparent; } 25% { background-color: rgba(255,87,51,0.2); } }
+.flash { animation: flash 1.4s ease-out; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee { animation: marquee 35s linear infinite; }
+@keyframes print { from { clip-path: inset(0 0 100% 0); transform: translateY(-10px); } to { clip-path: inset(0 0 0 0); transform: translateY(0); } }
+.print { animation: print 1.2s var(--ease-out-expo) .2s both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+

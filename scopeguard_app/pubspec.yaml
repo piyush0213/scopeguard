@@ -1,0 +1,11 @@
+name: _
+publish_to: none
+
+environment:
+  sdk: '^3.12.2'
+
+workspace:
+  - scopeguard_app_client
+  - scopeguard_app_server
+  - scopeguard_app_flutter
+

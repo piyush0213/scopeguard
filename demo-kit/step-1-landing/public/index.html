@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BrightSmile Dental — Book your visit</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="/">BrightSmile Dental</a>
+    <nav><a href="#features">Why us</a><a href="#pricing">Pricing</a><a href="#contact">Contact</a><a class="cta" href="/login.html">Patient login</a></nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Three dentists. Zero waiting rooms.</h1>
+    <p>Same-week appointments, transparent prices and a team that answers your questions before you sit in the chair.</p>
+    <a class="cta big" href="#contact">Request an appointment</a>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="features">
+    <article><span class="icon" aria-hidden="true">📅</span><h3>Same-week visits</h3><p>Three chairs and extended hours mean you rarely wait more than a few days.</p></article>
+    <article><span class="icon" aria-hidden="true">💬</span><h3>Upfront pricing</h3><p>Every treatment is priced before we start. No surprise invoices.</p></article>
+    <article><span class="icon" aria-hidden="true">🦷</span><h3>Gentle care</h3><p>Sedation options and a team trained for anxious patients and kids.</p></article>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="pricing">
+    <h2>Simple pricing</h2>
+    <div class="plans">
+      <div class="plan"><h3>Check-up</h3><p class="price">$79 <small>per visit</small></p><ul><li>Exam</li><li>X-rays</li><li>Cleaning</li></ul></div>
+      <div class="plan featured"><h3>Whitening</h3><p class="price">$249 <small>one-time</small></p><ul><li>In-chair session</li><li>Take-home kit</li></ul></div>
+      <div class="plan"><h3>Family plan</h3><p class="price">$29 <small>per month</small></p><ul><li>2 check-ups a year</li><li>15% off treatments</li></ul></div>
+    </div>
+  </section>
+
+  <!-- Contact form -->
+  <section id="contact" class="contact">
+    <h2>Request an appointment</h2>
+    <form id="contact-form">
+      <input name="name" placeholder="Your name" required />
+      <input name="email" type="email" placeholder="Email" required />
+      <input name="phone" placeholder="Phone (optional)" />
+      <textarea name="message" placeholder="What can we help with?" required></textarea>
+      <button type="submit">Send request</button>
+      <p id="contact-status" role="status"></p>
+    </form>
+  </section>
+
+  <footer>© BrightSmile Dental · 12 Harbour Road</footer>
+  <script>
+    document.getElementById('contact-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const status = document.getElementById('contact-status');
+      const body = Object.fromEntries(new FormData(e.target));
+      const res = await fetch('/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+      const data = await res.json();
+      status.textContent = res.ok ? 'Thanks! We will call you within one business day.' : data.error;
+      if (res.ok) e.target.reset();
+    });
+  </script>
+</body>
+</html>

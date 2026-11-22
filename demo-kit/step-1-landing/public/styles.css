@@ -1,0 +1,25 @@
+* { box-sizing: border-box; margin: 0; }
+body { font-family: system-ui, sans-serif; color: #1d2433; line-height: 1.5; }
+.nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 5vw; }
+.nav nav { display: flex; gap: 1.5rem; align-items: center; }
+.nav a { color: inherit; text-decoration: none; }
+.brand { font-weight: 700; }
+.cta { background: #0f766e; color: #fff !important; padding: .5rem 1rem; border-radius: 999px; }
+.cta.big { display: inline-block; margin-top: 1.5rem; padding: .9rem 1.6rem; }
+.hero { padding: 6rem 5vw; background: #f0fdfa; }
+.hero h1 { font-size: clamp(2.2rem, 5vw, 4rem); max-width: 14ch; }
+.hero p { max-width: 50ch; margin-top: 1rem; color: #475569; }
+.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; padding: 4rem 5vw; }
+.icon { font-size: 1.8rem; display: block; margin-bottom: .5rem; }
+.price small { font-size: .9rem; font-weight: 400; color: #64748b; }
+.pricing { padding: 4rem 5vw; background: #f8fafc; }
+.plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+.plan { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; }
+.plan.featured { border-color: #0f766e; }
+.price { font-size: 2rem; font-weight: 700; }
+.contact { padding: 4rem 5vw; }
+.contact form { display: grid; gap: .8rem; max-width: 480px; margin-top: 1.5rem; }
+input, textarea, button { font: inherit; padding: .8rem 1rem; border-radius: 10px; border: 1px solid #cbd5e1; }
+button { background: #0f766e; color: #fff; border: 0; cursor: pointer; }
+footer { padding: 2rem 5vw; color: #64748b; }
+@media (max-width: 640px) { .nav nav a:not(.cta) { display: none; } .hero { padding: 3rem 5vw; } }

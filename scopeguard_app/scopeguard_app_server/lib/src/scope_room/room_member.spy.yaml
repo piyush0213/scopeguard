@@ -1,0 +1,24 @@
+### Someone in the room. Signed-in ScopeGuard users get their real role; anyone else joins as a guest
+### (e.g. the client's co-founder) with just a name.
+class: RoomMember
+table: room_member
+fields:
+  roomId: int
+  name: String
+  ### client | dev | guest
+  role: String
+  color: int
+  ### Join order; the lock wave travels around the room in this order.
+  seat: int
+  ### Open live connections. 0 = left the room / closed the app.
+  connections: int
+  ### Agreed to the scope in this round (see ScopeRoom.round).
+  agreedRound: int
+  joinedAt: DateTime
+  ### Secret that authorizes this member's actions in the room.
+  token: String?, scope=serverOnly
+  ### This member's own ScopeGuard sign-in, if any (lets a client switch items on the bill). Server only.
+  sgToken: String?, scope=serverOnly
+indexes:
+  room_member_room_idx:
+    fields: roomId

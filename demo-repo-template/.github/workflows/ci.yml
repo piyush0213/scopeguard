@@ -1,0 +1,18 @@
+# Copy this into your demo GitHub repo. Every push to an order/* branch runs CI,
+# which fires a `workflow_run` webhook → ScopeGuard moves the order to "Quality Check".
+# To demo the red "CI failed" state, push a commit containing the file FAIL_CI.
+name: CI
+on:
+  push:
+    branches: ['order/**']
+  pull_request:
+    branches: [main]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint & test
+        run: |
+          if [ -f FAIL_CI ]; then echo "Tests failed (FAIL_CI present)"; exit 1; fi
+          echo "All checks passed"

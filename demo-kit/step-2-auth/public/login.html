@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Patient login — BrightSmile</title><link rel="stylesheet" href="/styles.css" /></head>
+<body>
+  <section class="contact">
+    <h2>Patient login</h2>
+    <form id="login">
+      <input name="email" type="email" placeholder="Email" required />
+      <input name="password" type="password" placeholder="Password" minlength="8" required />
+      <button>Sign in</button>
+      <a href="/api/auth/google">Continue with Google</a>
+      <a href="#" id="forgot">Forgot password?</a>
+      <p id="status" role="status"></p>
+    </form>
+  </section>
+  <script>
+    const status = document.getElementById('status');
+    document.getElementById('login').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const res = await fetch('/api/auth/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(Object.fromEntries(new FormData(e.target))) });
+      if (res.ok) location.href = '/dashboard.html';
+      else status.textContent = (await res.json()).error;
+    });
+    document.getElementById('forgot').addEventListener('click', async (e) => {
+      e.preventDefault();
+      const email = document.querySelector('[name=email]').value;
+      if (!email) return (status.textContent = 'Enter your email first');
+      await fetch('/api/auth/forgot-password', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email }) });
+      status.textContent = 'If that email has an account, a reset link is on its way.';
+    });
+  </script>
+</body>
+</html>

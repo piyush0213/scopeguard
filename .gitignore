@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+*.log
+
+# local dev
+logs/
+scopeguard_app/scopeguard_app_server/.pgdev/
+tools/cloudflared.exe

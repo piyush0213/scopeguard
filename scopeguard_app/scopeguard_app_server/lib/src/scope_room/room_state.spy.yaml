@@ -1,0 +1,11 @@
+### Everything a phone in the room needs, pushed live after every change.
+class: RoomState
+fields:
+  room: ScopeRoom
+  members: List<RoomMember>
+  ### The ScopeGuard order (JSON, same shape the website uses): live quote, items, total, status.
+  orderJson: String
+  moment: LockMoment?
+  ### Set once everyone agreed.
+  agreement: ScopeAgreement?
+  serverTime: DateTime

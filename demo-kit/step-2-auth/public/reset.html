@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8" /><title>Reset password — BrightSmile</title><link rel="stylesheet" href="/styles.css" /></head>
+<body>
+  <section class="contact">
+    <h2>Choose a new password</h2>
+    <form id="reset">
+      <input name="password" type="password" placeholder="New password (8+ characters)" minlength="8" required />
+      <button>Save password</button>
+      <p id="status" role="status"></p>
+    </form>
+  </section>
+  <script>
+    document.getElementById('reset').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const token = new URLSearchParams(location.search).get('token');
+      const res = await fetch('/api/auth/reset-password', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ token, password: e.target.password.value }) });
+      document.getElementById('status').textContent = res.ok ? 'Password updated — you can sign in now.' : (await res.json()).error;
+    });
+  </script>
+</body>
+</html>

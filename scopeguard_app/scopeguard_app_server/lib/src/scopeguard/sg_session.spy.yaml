@@ -1,0 +1,9 @@
+### A signed-in ScopeGuard user. The same account works on the website and in the app.
+class: SgSession
+fields:
+  token: String
+  userId: String
+  name: String
+  email: String
+  ### client | dev
+  role: String

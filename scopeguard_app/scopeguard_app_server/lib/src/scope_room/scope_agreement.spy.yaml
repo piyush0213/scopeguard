@@ -1,0 +1,15 @@
+### Permanent record: who agreed, in person, to exactly which version of the scope.
+class: ScopeAgreement
+table: scope_agreement
+fields:
+  roomId: int
+  orderId: String
+  quoteVersion: int
+  totalCents: int
+  fingerprint: String
+  ### "Asha (client)", "Ravi (dev)", ...
+  signers: List<String>
+  createdAt: DateTime
+indexes:
+  scope_agreement_order_idx:
+    fields: orderId

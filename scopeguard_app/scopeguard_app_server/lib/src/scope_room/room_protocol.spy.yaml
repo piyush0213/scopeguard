@@ -1,0 +1,6 @@
+### Returned when you open or join a room. Keep the token on this device.
+class: RoomTicket
+fields:
+  code: String
+  memberId: int
+  token: String

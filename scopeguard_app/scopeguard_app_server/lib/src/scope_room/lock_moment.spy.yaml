@@ -1,0 +1,7 @@
+### The synchronized "scope locked" wave: each phone lights up in seat order from startAt (server clock).
+class: LockMoment
+fields:
+  startAt: DateTime
+  stepMs: int
+  ### Member ids in wave order.
+  order: List<int>

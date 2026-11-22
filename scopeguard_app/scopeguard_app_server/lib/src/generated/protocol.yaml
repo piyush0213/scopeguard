@@ -1,0 +1,39 @@
+scopeRoom:
+  - now:
+  - open:
+  - join:
+  - toggle:
+  - agree:
+  - reopen:
+  - end:
+  - leave:
+  - watch:
+account:
+  - login:
+  - register:
+  - me:
+kitchen:
+  - queue:
+  - approveQuote:
+  - reprice:
+  - acceptOrder:
+  - connectRepo:
+  - offerAddon:
+orders:
+  - get:
+  - send:
+  - audit:
+  - proofScore:
+  - watch:
+shop:
+  - menu:
+  - myOrders:
+  - orderFromMenu:
+  - startScoping:
+  - answerScoping:
+  - toggle:
+  - checkout:
+  - verifyPayment:
+  - payAddon:
+  - skipAddon:
+  - acceptDelivery:

@@ -1,0 +1,27 @@
+### Scope Room (Track 1 "Here, together"): everyone at the kickoff meeting joins one ScopeGuard order from
+### their own phone, watches the quote change live and agrees to the scope together. Temporary by design.
+class: ScopeRoom
+table: scope_room
+fields:
+  ### 4-letter join code shown on screen and in the QR.
+  code: String
+  ### The ScopeGuard order this room negotiates, e.g. CD-1052.
+  orderId: String
+  title: String
+  ### open | agreed | ended
+  status: String
+  hostMemberId: int?
+  ### Bumped whenever the quote changes: earlier "agree" taps no longer count.
+  round: int
+  ### sha256 of the quote version + included items + prices that people are agreeing to.
+  fingerprint: String?
+  ### When the synchronized lock wave starts on every phone (server clock).
+  momentAt: DateTime?
+  createdAt: DateTime
+  expiresAt: DateTime
+  ### ScopeGuard token of whoever opened the room; used to read the order. Never sent to phones.
+  hostToken: String?, scope=serverOnly
+indexes:
+  scope_room_code_idx:
+    fields: code
+    unique: true

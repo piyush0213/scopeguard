@@ -1,0 +1,15 @@
+{
+  "name": "scopeguard",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install",
+    "dev": "concurrently -n api,web -c yellow,cyan \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server start",
+    "tunnel": "ngrok http 4000",
+    "reset": "npm --prefix server run db:reset"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
