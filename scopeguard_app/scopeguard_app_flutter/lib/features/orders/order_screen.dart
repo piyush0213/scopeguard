@@ -9,6 +9,7 @@ import '../../client.dart';
 import '../../core/payments.dart';
 import '../../core/session.dart';
 import '../../core/ui.dart';
+import 'chat_draft_submission.dart';
 import '../room/room_screen.dart';
 
 /// One order, live (updates from the website, GitHub pushes, Stripe and the Proof auditor appear here).
@@ -26,6 +27,7 @@ class _OrderScreenState extends State<OrderScreen> with WidgetsBindingObserver {
   StreamSubscription<String>? _sub;
   bool _busy = false;
   final _chat = TextEditingController();
+  final _chatSubmission = ChatDraftSubmission();
   final _repo = TextEditingController();
 
   String get _id => widget.orderId;
@@ -428,17 +430,21 @@ class _OrderScreenState extends State<OrderScreen> with WidgetsBindingObserver {
         Row(children: [
           Expanded(child: TextField(controller: _chat, decoration: const InputDecoration(hintText: 'Ask a question or request a change…'), onSubmitted: (_) => _send())),
           const SizedBox(width: 8),
-          IconButton.filled(onPressed: _send, icon: const Icon(Icons.send, size: 18), style: IconButton.styleFrom(backgroundColor: brand)),
+          IconButton.filled(
+            onPressed: _chatSubmission.isSending ? null : _send,
+            icon: const Icon(Icons.send, size: 18),
+            style: IconButton.styleFrom(backgroundColor: brand),
+          ),
         ]),
       ]),
     );
   }
 
   Future<void> _send() async {
-    final t = _chat.text.trim();
-    if (t.isEmpty) return;
-    _chat.clear();
-    await attempt(context, () => client.orders.send(token, _id, t));
+    if (_chatSubmission.isSending || _chat.text.trim().isEmpty) return;
+    setState(() {});
+    await _chatSubmission.submit(_chat, (message) => attempt(context, () => client.orders.send(token, _id, message)));
+    if (mounted) setState(() {});
   }
 }
 
